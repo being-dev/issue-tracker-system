@@ -1,0 +1,284 @@
+<div class="container-fluid mb-4 mt-4 bg-transparent border-success">
+    <div class="card bg-transparent border-success">
+        <div class="card-header bg-success border-success text-warn text-bold">
+            <div class="row">
+                <div class="col-md-11 text-white mt-2">
+                    <h5>{{companyTitle}}</h5>
+                </div>
+                <div class="col-md-1"><button class="btn btn-danger btn-outline-white" data-bs-toggle="modal"
+                        (click)="openDialog(companyDetailModal,'companyDetailModal')">Create</button></div>
+            </div>
+        </div>
+        <div class="card-body bg-transparent border-success table-responsive">
+            <!-- datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" -->
+            <table class="table table-striped table-fixed table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>AC Base Rate</th>
+                        <th>Non-AC Base Rate</th>
+                        <th>AC /Hour Rate</th>
+                        <th>Non-AC /Hour Rate</th>
+                        <th>AC /KM Rate</th>
+                        <th>Non-AC /KM Rate</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let company of companies | paginate : { itemsPerPage: itemsPerPage,currentPage: currentPage }">
+                        <td>{{ company['companyCode']}}</td>
+                        <td class="w-20">{{ company['companyName']}}</td>
+                        <td>{{ company['acVehicleBaseRate']}}</td>
+                        <td>{{ company['nonAcVehicleBaseRate']}}</td>
+                        <td>{{ company['acVehiclePerHourRate']}}</td>
+                        <td>{{ company['nonAcVehiclePerHourRate']}}</td>
+                        <td>{{ company['acVehiclePerKMRate']}}</td>
+                        <td>{{ company['nonAcVehiclePerKMRate']}}</td>
+                        <td>
+                            <div class="d-flex flex-row  mb-3">
+                                <a class="btn btn-dark" [title]="'Modify'" (click)="modifyCompany(company,companyDetailModal,'companyDetailModal')">
+                                    <span class="bi bi-pencil-square text-warning"></span>
+                                </a>&nbsp;
+                                <a class="btn btn-danger" [title]="'Remove'" (click)="confirmRemove(company)">
+                                    <span class="bi bi-trash"></span>
+                                </a>
+                            </div>
+                        </td>
+                        <!-- <td><button type="button" class="btn btn-success"><i class="bi bi-pencil-square"></i></button>&nbsp;
+                            <button type="button" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button></td> -->
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center">
+                <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="currentPage = $event"
+                    [responsive]="true"></pagination-controls>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #companyDetailModal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="isNewForm">Add New Company</h4>
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="!isNewForm">Modify Company Detail</h4>
+        <button type="button" class="btn btn-danger" title="Close" aria-label="Close" (click)="closeForm(companyForm)">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="m-4">
+            <div class="col-12" *ngFor="let alert of alerts">
+                <div class="alert alert-dismissible" [ngClass]="alert.cssClass">
+                    <i class="bi" [ngClass]="alert.iconClass"></i>&nbsp;
+                    <span class="text-center">{{alert.message }}</span>
+                </div>
+            </div>
+            <form class="needs-validation" method="post" [formGroup]="companyForm" (ngSubmit)="saveCompanyDetail()"
+                [class.was-validated]="formSubmit">
+                <input type="hidden" id="companyId" formControlName="companyId">
+                <div class="row mb-2">
+                    <label class="col-md-4 col-form-label text-end" for="companyCode">Company Code: <span
+                            class="required">(*)</span></label>
+                    <div class="col-md-4">
+                        <input type="text" [maxLength]="5" class="form-control" id="companyCode"
+                            formControlName="companyCode" placeholder="Company Code" [required]="true"
+                            [class.is-invalid]="(formSubmit || isTouched('companyCode')) && isInvalidField('companyCode')">
+                        <div *ngIf="(formSubmit || isTouched('companyCode')) && isRequiredField('companyCode')"
+                            class="d-block invalid-feedback">Please provide company code.</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-end" for="companyName">Company Name: <span
+                            class="required">(*)</span></label>
+                    <div class="col-md-4">
+                        <input type="text" [maxLength]="255" class="form-control" id="companyName"
+                            formControlName="companyName" placeholder="Company Name" [required]="true"
+                            [class.is-invalid]="(formSubmit || isTouched('companyName') && isInvalidField('companyName'))">
+                        <div *ngIf="(formSubmit || isTouched('companyName')) && isRequiredField('companyName')"
+                            class="d-block invalid-feedback">
+                            Please provide a company name.
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-end" for="companyGSTNO">Company GSTN No.:
+                        <span class="required">(*)</span></label>
+                    <div class="col-md-4">
+                        <input type="text" [maxLength]="15" class="form-control" [maxlength]="15" id="companyGSTNO"
+                            formControlName="gstNo" placeholder="Company GSTN No." [required]="true"
+                            [class.is-invalid]="(formSubmit || isTouched('companyGSTNO') && hasErrors('companyGSTNO'))">
+                        <div *ngIf="(formSubmit || isTouched('companyGSTNO')) && isRequiredField('companyGSTNO')"
+                            class="d-block invalid-feedback">
+                            Please provide a company GST No.
+                        </div>
+                        <div class="d-block invalid-feedback" *ngIf="patternError('companyGSTNO')">
+                            Please provide valid GST No.
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-end" for="companyAddress">Company Address:
+                        <span class="required">(*)</span></label>
+                    <div class="col-md-4">
+                        <textarea rows="3" [maxLength]="255" class="form-control" id="companyAddress"
+                            formControlName="companyAddress" placeholder="Company Address" [required]="true"
+                            [class.is-invalid]="(formSubmit || isTouched('companyAddress') && hasErrors('companyAddress'))"></textarea>
+                        <div *ngIf="(formSubmit || isTouched('companyAddress')) && isRequiredField('companyAddress')"
+                            class="d-block invalid-feedback">
+                            Please provide a company address.
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-end" for="contactPersonName">Contact Person
+                        Name:
+                        <span class="required">(*)</span></label>
+                    <div class="col-md-4">
+                        <input type="text" [maxLength]="255" class="form-control" id="contactPersonName"
+                            formControlName="contactPersonName" placeholder="Contact Person Name" [required]="true"
+                            [class.is-invalid]="(formSubmit || isTouched('contactPersonName') && hasErrors('contactPersonName'))">
+                        <div *ngIf="(formSubmit || isTouched('contactPersonName')) && isRequiredField('contactPersonName')"
+                            class="d-block invalid-feedback">
+                            Please provide a company contact person name.
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-end">Has AC Vehicle? :<span
+                            class="required">(*)</span></label>
+                    <div class="col-md-4 mt-2">
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" formControlName="ac" [value]="true">
+                            <label class="form-check-label" for="radioYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" formControlName="ac" [value]="false">
+                            <label class="form-check-label" for="radioNo">No</label>
+                        </div>
+                        <div *ngIf="(formSubmit || isTouched('ac')) && isRequiredField('ac')"
+                            class="d-block invalid-feedback">
+                            Please confirm AC vehicle or not?.
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-end" for="acVehicleBaseRate">AC Vehicle Base
+                        Rate: <span class="required">(*)</span></label>
+                    <div class="col-md-4">
+                        <input type="text" [maxLength]="10" class="form-control" id="acVehicleBaseRate"
+                            formControlName="acVehicleBaseRate" placeholder="AC Vehicle Base Rate" [required]="true"
+                            [class.is-invalid]="(formSubmit || isTouched('acVehicleBaseRate') && hasErrors('acVehicleBaseRate'))">
+                        <div *ngIf="(formSubmit || isTouched('acVehicleBaseRate')) && isRequiredField('acVehicleBaseRate')"
+                            class="d-block invalid-feedback">
+                            Please provide a AC vehicle transport base rate.
+                        </div>
+                        <div class="d-block invalid-feedback" *ngIf="patternError('acVehicleBaseRate')">
+                            AC vehicle base rate must be a positive integer or decimal
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-end" for="nonAcVehicleBaseRate">Non-AC
+                        Vehicle
+                        Base Rate: <span class="required">(*)</span></label>
+                    <div class="col-md-4">
+                        <input type="text" [maxLength]="10" class="form-control" id="nonAcVehicleBaseRate"
+                            formControlName="nonAcVehicleBaseRate" placeholder="Non-AC Vehicle Base Rate"
+                            [required]="true"
+                            [class.is-invalid]="(formSubmit || isTouched('nonAcVehicleBaseRate') && hasErrors('nonAcVehicleBaseRate'))">
+                        <div *ngIf="(formSubmit || isTouched('nonAcVehicleBaseRate')) && isRequiredField('nonAcVehicleBaseRate')"
+                            class="d-block invalid-feedback">
+                            Please provide a Non-AC vehicle transport base rate.
+                        </div>
+                        <div class="d-block invalid-feedback" *ngIf="patternError('nonAcVehicleBaseRate')">
+                            Non-AC vehicle base rate must be a positive integer or decimal
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-end" for="acVehiclePerHourRate">Per Hour AC
+                        Vehicle Rate: <span class="required">(*)</span></label>
+                    <div class="col-md-4">
+                        <input type="text" [maxLength]="10" class="form-control" id="acVehiclePerHourRate"
+                            formControlName="acVehiclePerHourRate" placeholder="AC Vehicle Per Hour Rate"
+                            [required]="true"
+                            [class.is-invalid]="(formSubmit || isTouched('acVehiclePerHourRate') && hasErrors('acVehiclePerHourRate'))">
+                        <div *ngIf="(formSubmit || isTouched('acVehiclePerHourRate')) && isRequiredField('acVehiclePerHourRate')"
+                            class="d-block invalid-feedback">
+                            Please provide a AC vehicle transport Per Hour rate.
+                        </div>
+                        <div class="d-block invalid-feedback" *ngIf="patternError('acVehiclePerHourRate')">
+                            AC vehicle per hour rate must be a positive integer or decimal
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-end" for="nonAcVehiclePerHourRate">Per Hour
+                        Non-AC Vehicle Rate:
+                        <span class="required">(*)</span></label>
+                    <div class="col-md-4">
+                        <input type="text" [maxLength]="10" class="form-control" id="nonAcVehiclePerHourRate"
+                            formControlName="nonAcVehiclePerHourRate" placeholder="Non-AC Vehicle Per Hour Rate"
+                            [required]="true"
+                            [class.is-invalid]="(formSubmit || isTouched('nonAcVehiclePerHourRate') && hasErrors('nonAcVehiclePerHourRate'))">
+                        <div *ngIf="(formSubmit || isTouched('nonAcVehiclePerHourRate')) && isRequiredField('nonAcVehiclePerHourRate')"
+                            class="d-block invalid-feedback">
+                            Please provide a Non-AC vehicle transport Per Hour rate.
+                        </div>
+                        <div class="d-block invalid-feedback" *ngIf="patternError('nonAcVehiclePerHourRate')">
+                            Non-AC vehicle per hour rate must be a positive integer or decimal
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-end" for="acVehiclePerKMRate">Per KM AC
+                        Vehicle
+                        Rate: <span class="required">(*)</span></label>
+                    <div class="col-md-4">
+                        <input type="text" [maxLength]="10" class="form-control" id="acVehiclePerKMRate"
+                            formControlName="acVehiclePerKMRate" placeholder="AC Vehicle Per Kilometer Rate"
+                            [required]="true"
+                            [class.is-invalid]="(formSubmit || isTouched('acVehiclePerKMRate') && hasErrors('acVehiclePerKMRate'))">
+                        <div *ngIf="(formSubmit || isTouched('acVehiclePerKMRate')) && isRequiredField('acVehiclePerKMRate')"
+                            class="d-block invalid-feedback">
+                            Please provide a AC vehicle transport Per KiloMeter rate.
+                        </div>
+                        <div class="d-block invalid-feedback" *ngIf="patternError('acVehiclePerKMRate')">
+                            AC vehicle per kilometer rate must be a positive integer or decimal
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label text-end" for="nonAcVehiclePerKMRate">Per KM
+                        Non-AC
+                        Vehicle Rate:
+                        <span class="required">(*)</span></label>
+                    <div class="col-md-4">
+                        <input type="text" [maxLength]="10" class="form-control" id="nonAcVehiclePerKMRate"
+                            formControlName="nonAcVehiclePerKMRate" placeholder="Non-AC Vehicle Per Kilometer Rate"
+                            [required]="true"
+                            [class.is-invalid]="(formSubmit || isTouched('nonAcVehiclePerKMRate') && hasErrors('nonAcVehiclePerKMRate'))">
+                        <div *ngIf="(formSubmit || isTouched('nonAcVehiclePerKMRate')) && isRequiredField('nonAcVehiclePerKMRate')"
+                            class="d-block invalid-feedback">
+                            Please provide a Non-AC vehicle transport Per KiloMeter rate.
+                        </div>
+                        <div class="d-block invalid-feedback" *ngIf="patternError('nonAcVehiclePerKMRate')">
+                            Non-AC vehicle per kilometer rate must be a positive integer or decimal
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-4 offset-sm-4">
+                        <button type="submit" id="submitBtn" class="btn btn-success" *ngIf="isNewForm">Create</button>
+                        <button type="submit" id="submitBtn" class="btn btn-success" *ngIf="!isNewForm">Update</button>
+                        <button type="reset" class="btn btn-dark ms-2" (click)="formReset(companyForm)">Reset</button>
+                        <button type="reset" class="btn btn-danger ms-2" (click)="closeForm(companyForm)">Exit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-template>

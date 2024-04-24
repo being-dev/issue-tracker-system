@@ -1,0 +1,57 @@
+<div class="login-page bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <h3 class="mb-3 text-center">Comodo :: Sign In</h3>
+                <div class="bg-white shadow rounded">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-md-7 pe-0">                            
+                            <div class=" h-100 py-5 px-5">
+                                <div class="col-12" *ngFor="let alert of alerts">
+                                    <div class="alert alert-dismissible" [ngClass]="alert.type">{{alert.message }}
+                                        <button type="button" aria-label="Close" class="btn-close"></button>
+                                    </div>
+                                </div>
+                                <form class="row g-4" [formGroup]="loginForm" (ngSubmit)="authenticate()">
+                                    <div class="col-12">
+                                        <div class="input-group">
+                                            <div class="input-group-text"><i class="bi bi-person-fill"></i></div>
+                                            <input type="email" formControlName="userName" class="form-control"
+                                                placeholder="Username"
+                                                [class.is-invalid]="(formSubmit || loginForm.get('userName')!.touched) && loginForm.get('userName')!.invalid">
+                                            <div *ngIf="(formSubmit || loginForm.get('userName')!.touched) && loginForm.get('userName')!.hasError('required')"
+                                                class="d-block invalid-feedback">Please provide a Username.</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="input-group">
+                                            <div class="input-group-text"><i class="bi bi-lock-fill"></i></div>
+                                            <input type="password" formControlName="password" class="form-control"
+                                                placeholder="Password"
+                                                [class.is-invalid]="(formSubmit || loginForm.get('password')!.touched) && loginForm.get('password')!.invalid">
+                                            <div *ngIf="(formSubmit || loginForm.get('password')!.touched) && loginForm.get('password')!.hasError('required')"
+                                                class="d-block invalid-feedback">Please provide a password.</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button type="submit"
+                                            class="btn btn-primary px-4 float-start mt-4">Login</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-5 ps-0 d-none d-md-block">
+                            <div class="form-right h-100 bg-primary text-white text-center pt-5">
+                                <i class="bi bi-bootstrap"></i>
+                                <div class="fs-1">Enterprise Solution</div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

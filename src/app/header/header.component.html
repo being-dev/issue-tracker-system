@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="this.userService.isAllowUser()">
+    <div class="container">
+        <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a [routerLink]="'dashboard'" class="nav-link"><i class="bi-bank"></i> Dashboard</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="masterDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="true"><i class="bi-folder-plus"></i> Masters</a>
+                    <ul class="dropdown-menu" aria-labelledby="masterDropdown">
+                        <li><a class="dropdown-item" [routerLink]="'masters/enquiry'">Enquiry</a></li>
+                        <li><a class="dropdown-item" [routerLink]="'masters/vehicle'">Vehicle</a></li>
+                        <li><a class="dropdown-item" [routerLink]="'masters/company'">Company</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="javascript:void(0);" id="transactionDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="true"><i class="bi-database-fill-add"></i> Transactions</a>
+                    <ul class="dropdown-menu" aria-labelledby="transactionDropdown">
+                        <li><a class="dropdown-item" [routerLink]="'transactions/invoice'">Invoice</a></li>                                            
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="javascript:void(0);" id="reportDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="true"><i class="bi-bar-chart"></i> Reports</a>
+                    <ul class="dropdown-menu" aria-labelledby="reportDropdown">
+                        <li><a class="dropdown-item" [routerLink]="'reports/invoice'">Invoice</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-item nav-link btn btn-outline-danger" (click)="logout()"><i class="bi-escape"></i> Logout</button>
+                </li>
+            </ul>
+            <!-- <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form> -->
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,14 @@
+a {
+    text-decoration: none;
+}
+.login-page {
+    width: 100%;
+    min-height: 100% !important;
+    height: 400px;
+    display: inline-block;
+    display: flex;
+    align-items: center;
+}
+.form-right i {
+    font-size: 100px;
+}    
