@@ -8,7 +8,7 @@ import { ModalComponent } from './modal/modal.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'comodo-ui';
+  title = 'issue-tracker-system';
 
   public isLoggedInUser = false;
   constructor(private userService: UserService,private modalComponent: ModalComponent) {

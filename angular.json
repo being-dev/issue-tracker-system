@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "comodo-ui": {
+    "issue-tracker-system": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/comodo-ui",
+            "outputPath": "dist/issue-tracker-system",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -74,10 +74,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "comodo-ui:build:production"
+              "browserTarget": "issue-tracker-system:build:production"
             },
             "development": {
-              "browserTarget": "comodo-ui:build:development"
+              "browserTarget": "issue-tracker-system:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -85,7 +85,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "comodo-ui:build"
+            "browserTarget": "issue-tracker-system:build"
           }
         },
         "test": {
